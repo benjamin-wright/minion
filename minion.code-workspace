@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "root"
+		},
+		{
+			"path": "crds"
+		},
+		{
+			"path": "components/pipeline-monitor"
+		},
+		{
+			"path": "components/pipeline-monitor/src",
+			"name": "pipeline-monitor (go)"
+		},
+		{
+			"path": "components/pipeline-monitor/integration",
+			"name": "integration"
+		}
+	],
+	"settings": {}
+}

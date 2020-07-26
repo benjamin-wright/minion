@@ -1,0 +1,42 @@
+name: pipeline-monitor
+serviceAccount: pipeline-monitor
+roleName: pipeline-monitor
+roleBindingName: pipeline-monitor
+
+image:
+  # name:
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 32M
+  requests:
+    cpu: 250m
+    memory: 32M
+
+environment:
+  name: pipeline-monitor-environment
+  values:
+    logLevel: info
+
+tests:
+  enabled: false
+  name: pipeline-monitor-int-tests
+  # image:
+
+  serviceAccount: pipeline-monitor-int-tests
+  roleName: pipeline-monitor-int-tests
+  roleBindingName: pipeline-monitor-int-tests
+
+  environment:
+    name: pipeline-monitor-int-environment
+    values:
+      logLevel: info
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 512M
+    requests:
+      cpu: 1
+      memory: 512M

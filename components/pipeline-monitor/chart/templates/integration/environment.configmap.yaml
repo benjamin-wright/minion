@@ -1,0 +1,8 @@
+{{- if .Values.tests.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.tests.environment.name }}
+data:
+  LOG_LEVEL: {{ .Values.tests.environment.values.logLevel }}
+{{- end -}}

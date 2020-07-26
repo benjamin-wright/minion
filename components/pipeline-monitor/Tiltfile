@@ -1,0 +1,51 @@
+load('ext://restart_process', 'docker_build_with_restart')
+allow_k8s_contexts('kind-cava')
+
+local_resource(
+    'crds',
+    'helm delete crds || true && helm install crds ../../crds',
+    deps=['./crds']
+)
+
+local_resource(
+    'compile',
+    'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/pipeline-monitor',
+    deps=['./src']
+)
+
+local_resource(
+    'unit-tests',
+    'cd src && go test ./... -timeout 10s',
+    deps=['./src']
+)
+
+docker_build_with_restart(
+    'pipeline-monitor',
+    'build',
+    entrypoint='/go/bin/pipeline-monitor',
+    dockerfile='Dockerfile',
+    build_args={
+        'EXE_NAME': 'pipeline-monitor'
+    },
+    live_update=[
+        sync('./build', '/go/bin')
+    ]
+)
+
+docker_build(
+    'int-tests',
+    'integration',
+    dockerfile='integration/Dockerfile'
+)
+
+k8s_resource(
+    'pipeline-monitor-int-tests',
+    new_name='int-tests'
+)
+
+k8s_yaml(helm('chart', name='pipeline-monitor', namespace='default', set=[
+    'image.name=pipeline-monitor',
+    'environment.values.loggerLevel=info',
+    'tests.enabled=true',
+    'tests.image=int-tests'
+]))
