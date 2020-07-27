@@ -1,5 +1,5 @@
 load('ext://restart_process', 'docker_build_with_restart')
-allow_k8s_contexts('kind-cava')
+allow_k8s_contexts('kind-local-dev')
 
 local_resource(
     'crds',

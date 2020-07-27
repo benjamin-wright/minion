@@ -8,6 +8,9 @@
 			"path": "crds"
 		},
 		{
+			"path": "components/crd-lib"
+		},
+		{
 			"path": "components/pipeline-monitor"
 		},
 		{
