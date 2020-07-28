@@ -37,8 +37,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 }
 
 // Init configure the kubernetes environment with details of the CRD
-func Init() {
-	addToScheme(scheme.Scheme)
+func Init() error {
+	return addToScheme(scheme.Scheme)
 }
 
 // TypedClient return a new versioned REST client for accessing CRD resources
