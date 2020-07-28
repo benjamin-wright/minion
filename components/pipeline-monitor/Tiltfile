@@ -10,7 +10,7 @@ local_resource(
 local_resource(
     'compile',
     'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/pipeline-monitor',
-    deps=['./src']
+    deps=['./src', '../crd-lib']
 )
 
 local_resource(
