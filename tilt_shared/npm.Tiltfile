@@ -1,5 +1,14 @@
 def npm_init():
-    root_dir = find_root(os.getcwd())
+    root_dir = __find_root(os.getcwd())
+
+    __builder_image(root_dir)
+    __build_module(root_dir, 'eslint-config-minion', [])
+    __build_module(root_dir, 'crd-lib', [ 'eslint-config-minion' ])
+
+def npm_module(module):
+    return 'npm: ' + module
+
+def __builder_image(root_dir):
     local_resource(
         'npm: build image',
         [
@@ -14,9 +23,7 @@ def npm_init():
         ]
     )
 
-def npm_module(module):
-    root_dir = find_root(os.getcwd())
-
+def __build_module(root_dir, module, deps):
     local_resource(
         'npm: ' + module,
         [
@@ -24,19 +31,17 @@ def npm_module(module):
             '-c',
             """
             cd {root_dir}/modules/{module}
-            docker run --rm -v $(pwd):/var/app/src --network host npm_builder 'npm install && npm test && npm run lint && npm version patch && npm publish'
+            docker run --rm -v $(pwd):/var/app/src --network host npm_builder 'npm install --no-audit && npm test --silent && npm run lint --silent && npm version patch && npm publish'
             """.format(
                 root_dir=root_dir,
                 module=module
             )
         ],
         deps=[root_dir + '/modules/' + module + '/lib'],
-        resource_deps=['npm: build image']
+        resource_deps=['npm: build image'] + [ 'npm: ' + dep for dep in deps ]
     )
 
-    return 'npm: ' + module
-
-def find_root(filepath):
+def __find_root(filepath):
     files = listdir(filepath)
 
     if filepath == '/':
@@ -46,4 +51,4 @@ def find_root(filepath):
         if os.path.basename(file) == '.gitignore':
             return filepath
 
-    return find_root(os.path.abspath(os.path.join(filepath, '/..')))
+    return __find_root(os.path.abspath(os.path.join(filepath, '/..')))
