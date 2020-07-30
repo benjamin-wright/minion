@@ -12,4 +12,4 @@ require (
 	ponglehub.co.uk/crd-lib v1.0.0
 )
 
-replace ponglehub.co.uk/crd-lib => ../../crd-lib
+replace ponglehub.co.uk/crd-lib => ../../../libraries/crd-lib

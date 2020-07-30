@@ -1,0 +1,16 @@
+{
+  "name": "@minion-ci/crd-lib",
+  "version": "1.0.32",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Test passed!\"",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^7.5.0",
+    "jest": "^26.1.0"
+  }
+}

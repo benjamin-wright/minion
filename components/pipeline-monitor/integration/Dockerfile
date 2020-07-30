@@ -4,7 +4,7 @@ WORKDIR /var/usr/app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --registry https://npm.ponglehub.co.uk --strict-ssl false
 
 COPY ./ ./
 

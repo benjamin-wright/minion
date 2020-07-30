@@ -5,21 +5,29 @@
 			"name": "root"
 		},
 		{
+			"path": "tilt_shared",
+			"name": "tilt shared"
+		},
+		{
 			"path": "crds"
 		},
 		{
-			"path": "components/crd-lib"
+			"path": "libraries"
 		},
 		{
-			"path": "components/pipeline-monitor"
+			"path": "modules"
 		},
 		{
-			"path": "components/pipeline-monitor/src",
-			"name": "pipeline-monitor (go)"
+			"path": "components/pipeline-monitor",
+			"name": "pipeline-monitor"
 		},
 		{
 			"path": "components/pipeline-monitor/integration",
-			"name": "integration"
+			"name": "pipeline-monitor (int)"
+		},
+		{
+			"path": "components/pipeline-monitor/src",
+			"name": "pipeline-monitor (src)"
 		}
 	],
 	"settings": {}

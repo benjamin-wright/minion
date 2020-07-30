@@ -1,11 +1,16 @@
 load('ext://restart_process', 'docker_build_with_restart')
+load('../../tilt_shared/npm.Tiltfile', 'npm_module', 'npm_init')
 allow_k8s_contexts('kind-local-dev')
+
+# CRDs
 
 local_resource(
     'crds',
     'helm delete crds || true && helm install crds ../../crds',
     deps=['./crds']
 )
+
+# Pipeline Monitor
 
 local_resource(
     'compile',
@@ -32,16 +37,25 @@ docker_build_with_restart(
     ]
 )
 
+# Integration tests
+
+npm_init()
+npm_module("crd-lib")
+
 docker_build(
     'int-tests',
     'integration',
-    dockerfile='integration/Dockerfile'
+    dockerfile='integration/Dockerfile',
+    network='host'
 )
 
 k8s_resource(
     'pipeline-monitor-int-tests',
-    new_name='int-tests'
+    new_name='int-tests',
+    resource_deps=['npm: crd-lib']
 )
+
+# Deployment
 
 k8s_yaml(helm('chart', name='pipeline-monitor', namespace='default', set=[
     'image.name=pipeline-monitor',

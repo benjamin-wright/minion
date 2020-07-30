@@ -1,5 +1,7 @@
+const crds = require('@minion-ci/crd-lib')
+
 describe('test', () => {
   it('works', () => {
-    console.log('hello world')
+    crds.hello()
   })
 })
