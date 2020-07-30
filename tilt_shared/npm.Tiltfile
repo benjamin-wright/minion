@@ -1,26 +1,16 @@
 def npm_init():
     root_dir = __find_root(os.getcwd())
 
-    __builder_image(root_dir)
+    __login(root_dir)
     __build_module(root_dir, 'eslint-config-minion', [])
     __build_module(root_dir, 'crd-lib', [ 'eslint-config-minion' ])
 
 def npm_module(module):
     return 'npm: ' + module
 
-def __builder_image(root_dir):
-    local_resource(
-        'npm: build image',
-        [
-            '/bin/bash',
-            '-c',
-            """
-            cd {root_dir}/modules/build-image
-            docker build -t npm_builder .
-            """.format(
-                root_dir=root_dir
-            )
-        ]
+def __login(root_dir):
+    local(
+        "cd " + root_dir + "/modules; ./login.sh"
     )
 
 def __build_module(root_dir, module, deps):
@@ -30,15 +20,21 @@ def __build_module(root_dir, module, deps):
             '/bin/bash',
             '-c',
             """
+            set -o errexit
             cd {root_dir}/modules/{module}
-            docker run --rm -v $(pwd):/var/app/src --network host npm_builder 'npm install --no-audit && npm test --silent && npm run lint --silent && npm version patch && npm publish'
+            echo "node_modules" > .dockerignore
+            DOCKER_BUILDKIT=1 docker build --secret id=npm_token,src=$HOME/.npmrc -t npm-{module} --network host -f ../Dockerfile ./
+            npm version patch
             """.format(
                 root_dir=root_dir,
                 module=module
             )
         ],
-        deps=[root_dir + '/modules/' + module + '/lib'],
-        resource_deps=['npm: build image'] + [ 'npm: ' + dep for dep in deps ]
+        deps=[
+            root_dir + '/modules/' + module + '/lib',
+            root_dir + '/modules/Dockerfile'
+        ],
+        resource_deps=[ 'npm: ' + dep for dep in deps ]
     )
 
 def __find_root(filepath):

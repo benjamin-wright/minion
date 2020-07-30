@@ -1,8 +1,8 @@
 {
-  "name": "@minion/eslint-config-minion",
-  "version": "1.0.5",
+  "name": "@minion-ci/eslint-config-minion",
+  "version": "1.0.19",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"NA\"",
     "lint": "echo \"NA\""

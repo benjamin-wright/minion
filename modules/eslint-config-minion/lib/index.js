@@ -12,7 +12,7 @@ module.exports = {
     },
     "globals": {
         "module": true,
-        "Promise": true
+        "Promise": true,
     },
     "rules": {
         "curly": "error",
