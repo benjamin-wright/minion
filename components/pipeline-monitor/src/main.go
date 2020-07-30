@@ -1,11 +1,10 @@
 package main
 
 import (
-	"time"
-
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	crdClient "ponglehub.co.uk/crd-lib/pkg/client"
+	crdInformer "ponglehub.co.uk/crd-lib/pkg/informer"
 	"ponglehub.co.uk/crd-lib/pkg/v1alpha1"
 	"ponglehub.co.uk/pipeline-monitor/config"
 )
@@ -24,14 +23,19 @@ func main() {
 		log.Fatalf("Failed to create CRD client: %+v", err)
 	}
 
-	for {
+	informer, err := crdInformer.Pipelines()
+	if err != nil {
+		log.Fatalf("Failed to create CRD informer: %+v", err)
+	}
+
+	for event := range informer.Events {
+		log.Infof("Received event: %s", event.Kind)
+
 		pipelines, err := client.ListPipelines(metav1.ListOptions{})
 		if err != nil {
 			log.Errorf("Failed to list pipelines: %+v", err)
 		} else {
-			log.Infof("Pipelines: %+v", pipelines.Items)
+			log.Infof("Pipelines: %d", len(pipelines.Items))
 		}
-
-		time.Sleep(10 * time.Second)
 	}
 }

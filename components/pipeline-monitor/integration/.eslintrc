@@ -1,8 +1,3 @@
 {
-    "plugins": [ "jest" ],
-    "extends": "standard",
-    "env": {
-        "jest/globals": true
-    },
-    "parserOptions": { "ecmaVersion": 6 }
+    "extends": "@minion-ci/eslint-config-minion"
 }

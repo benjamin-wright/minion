@@ -36,8 +36,8 @@ func (c MinionCRDClient) ListPipelines(options metav1.ListOptions) (*v1alpha1.Pi
 	return &result, err
 }
 
-// Watch get informed when the list of pipeline CRDs changes
-func (c MinionCRDClient) Watch(options metav1.ListOptions) (watch.Interface, error) {
+// WatchPipelines get informed when the list of pipeline CRDs changes
+func (c MinionCRDClient) WatchPipelines(options metav1.ListOptions) (watch.Interface, error) {
 	options.Watch = true
 
 	return c.client.

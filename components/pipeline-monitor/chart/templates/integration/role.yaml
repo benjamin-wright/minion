@@ -6,5 +6,5 @@ metadata:
 rules:
 - apiGroups: ["minion.ponglehub.co.uk"]
   resources: ["pipelines"]
-  verbs: ["create", "delete", "get"]
+  verbs: ["create", "delete", "get", "list"]
 {{- end -}}

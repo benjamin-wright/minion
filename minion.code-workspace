@@ -12,10 +12,16 @@
 			"path": "crds"
 		},
 		{
-			"path": "libraries"
+			"path": "libraries/crd-lib",
+			"name": "go: crd-lib"
 		},
 		{
-			"path": "modules"
+			"path": "modules/eslint-config-minion",
+			"name": "npm: eslint"
+		},
+		{
+			"path": "modules/crd-lib",
+			"name": "npm: crd-lib"
 		},
 		{
 			"path": "components/pipeline-monitor",

@@ -19,7 +19,7 @@ A resource is a way of checking an external data source for the latest version, 
 | LOAD_VERSION | The version to checkout, as provided by the `version` command |
 
 ```yaml
-apiVersion: "minion.ponglehub.com/v1alpha1"
+apiVersion: "minion.ponglehub.co.uk/v1alpha1"
 kind: Resource
 metadata:
   name: my-resource
@@ -40,7 +40,7 @@ spec:
 ### Pipeline
 ---
 ```yaml
-apiVersion: "minion.ponglehub.com/v1alpha1"
+apiVersion: "minion.ponglehub.co.uk/v1alpha1"
 kind: Pipeline
 metadata:
   name: my-pipeline
@@ -68,7 +68,7 @@ spec:
 ### PipelineRun
 ---
 ```yaml
-apiVersion: "minion.ponglehub.com/v1alpha1"
+apiVersion: "minion.ponglehub.co.uk/v1alpha1"
 kind: PipelineRun
 metadata:
   name: my-pipeline-1
@@ -80,7 +80,7 @@ spec:
 ### Task
 ---
 ```yaml
-apiVersion: "minion.ponglehub.com/v1alpha1"
+apiVersion: "minion.ponglehub.co.uk/v1alpha1"
 kind: Task
 metadata:
   name: my-task
@@ -94,7 +94,7 @@ spec:
 ### Version
 ---
 ```yaml
-apiVersion: "minion.ponglehub.com/v1alpha1"
+apiVersion: "minion.ponglehub.co.uk/v1alpha1"
 kind: Version
 metadata:
   name: my-version

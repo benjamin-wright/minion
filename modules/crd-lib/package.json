@@ -1,17 +1,19 @@
 {
   "name": "@minion-ci/crd-lib",
-  "version": "1.0.50",
+  "version": "1.0.77",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Test passed!\"",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "whatevs": "hi"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@minion-ci/eslint-config-minion": "^1.0.1",
     "eslint": "^7.5.0",
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "kubernetes-client": "^9.0.0"
   }
 }

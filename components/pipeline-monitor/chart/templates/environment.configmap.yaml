@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.environment.name }}
 data:
-  LOG_LEVEL: {{ .Values.logLevel }}
+  LOG_LEVEL: {{ .Values.environment.values.logLevel }}

@@ -1,7 +1,5 @@
-module.exports = {
-    hello
-};
+const pipelines = require('./pipelines');
 
-function hello() {
-    console.log('worlds');
-}
+module.exports = {
+    pipelines
+};

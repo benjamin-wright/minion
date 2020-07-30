@@ -5,4 +5,5 @@ metadata:
   name: {{ .Values.tests.environment.name }}
 data:
   LOG_LEVEL: {{ .Values.tests.environment.values.logLevel }}
+  NAMESPACE: {{ .Release.Namespace }}
 {{- end -}}
