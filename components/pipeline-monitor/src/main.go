@@ -52,17 +52,24 @@ func main() {
 		switch event := event.(type) {
 		case crdInformer.PipelineEvent:
 			log.Infof("Received pipeline event: %s", event.Kind)
+
+			pipelines, err := client.ListPipelines(metav1.ListOptions{})
+			if err != nil {
+				log.Errorf("Failed to list pipelines: %+v", err)
+			} else {
+				log.Infof("Pipelines: %d", len(pipelines.Items))
+			}
 		case crdInformer.ResourceEvent:
 			log.Infof("Received resource event: %s", event.Kind)
+
+			resources, err := client.ListResources(metav1.ListOptions{})
+			if err != nil {
+				log.Errorf("Failed to list resources: %+v", err)
+			} else {
+				log.Infof("Resources: %d", len(resources.Items))
+			}
 		default:
 			log.Errorf("Unknown event type: %T", event)
-		}
-
-		pipelines, err := client.ListPipelines(metav1.ListOptions{})
-		if err != nil {
-			log.Errorf("Failed to list pipelines: %+v", err)
-		} else {
-			log.Infof("Pipelines: %d", len(pipelines.Items))
 		}
 	}
 }

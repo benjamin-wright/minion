@@ -56,8 +56,6 @@ func Pipelines() (*PipelineInformer, error) {
 
 func addPipelineFunc(events chan<- PipelineEvent) func(interface{}) {
 	return func(obj interface{}) {
-		logrus.Info("Added event")
-
 		events <- PipelineEvent{
 			Kind:    ADDED,
 			Current: obj.(*v1alpha1.Pipeline),

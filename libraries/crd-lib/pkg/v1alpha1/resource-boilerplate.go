@@ -10,12 +10,8 @@ func (in *Resource) DeepCopyInto(out *Resource) {
 	out.ObjectMeta = in.ObjectMeta
 	out.Spec = ResourceSpec{
 		Image:   in.Spec.Image,
-		Env:     map[string]string{},
+		Env:     append([]EnvVar{}, in.Spec.Env...),
 		Secrets: append([]Secret{}, in.Spec.Secrets...),
-	}
-
-	for k, v := range in.Spec.Env {
-		out.Spec.Env[k] = v
 	}
 
 	out.Status = ResourceStatus{

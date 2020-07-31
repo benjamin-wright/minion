@@ -6,9 +6,9 @@ import (
 
 // ResourceSpec The specification for a Minion-CI resource CRD
 type ResourceSpec struct {
-	Image   string            `json:"image,omitempty"`
-	Env     map[string]string `json:"env,omitempty"`
-	Secrets []Secret          `json:"secrets,omitempty"`
+	Image   string   `json:"image,omitempty"`
+	Env     []EnvVar `json:"env,omitempty"`
+	Secrets []Secret `json:"secrets,omitempty"`
 }
 
 // ResourceStatus The status for a Minion-CI resource CRD

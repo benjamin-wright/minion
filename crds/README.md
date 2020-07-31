@@ -26,8 +26,10 @@ metadata:
 spec:
   image: docker.io/resource-checker
   env:
-    REPO: git@github.com:username/repo.git
-    BRANCH: master
+    - name: REPO
+      value: git@github.com:username/repo.git
+    - name: BRANCH
+      value: master
   secrets:
   - name: my-config
     keys:
