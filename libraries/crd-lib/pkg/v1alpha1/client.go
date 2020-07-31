@@ -24,12 +24,16 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		schemeGroupVersion,
 		&Pipeline{},
 		&PipelineList{},
+		&Resource{},
+		&ResourceList{},
 	)
 
 	scheme.AddKnownTypes(
 		schema.GroupVersion{Group: groupName, Version: "__internal"},
 		&Pipeline{},
 		&PipelineList{},
+		&Resource{},
+		&ResourceList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, schemeGroupVersion)

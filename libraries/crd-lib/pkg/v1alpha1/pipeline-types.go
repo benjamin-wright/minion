@@ -6,9 +6,22 @@ import (
 
 // PipelineSpec The specification for a Minion-CI pipeline CRD
 type PipelineSpec struct {
-	Queue  string `json:"queue,omitempty"`
-	URL    string `json:"url,omitempty"`
-	Filter string `json:"filter,omitempty"`
+	Resources []PipelineResource `json:"resources"`
+	Steps     []PipelineStep     `json:"steps"`
+}
+
+type PipelineResource struct {
+	Name    string `json:"name"`
+	Trigger bool   `json:"trigger"`
+}
+
+type PipelineStep struct {
+	Name     string `json:"name"`
+	Resource string `json:"resource,omitempty"`
+	Action   string `json:"action,omitempty"`
+	Path     string `json:"path,omitempty"`
+	Image    string `json:"image,omitempty"`
+	Command  string `json:"command,omitempty"`
 }
 
 // PipelineStatus The status for a Minion-CI pipeline CRD

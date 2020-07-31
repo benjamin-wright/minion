@@ -9,9 +9,10 @@ func (in *Pipeline) DeepCopyInto(out *Pipeline) {
 	out.TypeMeta = in.TypeMeta
 	out.ObjectMeta = in.ObjectMeta
 	out.Spec = PipelineSpec{
-		Queue: in.Spec.Queue,
-		URL:   in.Spec.URL,
+		Resources: append([]PipelineResource{}, in.Spec.Resources...),
+		Steps:     append([]PipelineStep{}, in.Spec.Steps...),
 	}
+
 	out.Status = PipelineStatus{
 		Status: in.Status.Status,
 	}

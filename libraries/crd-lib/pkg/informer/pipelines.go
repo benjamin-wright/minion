@@ -3,10 +3,26 @@ package informer
 import (
 	"time"
 
+	"github.com/sirupsen/logrus"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/tools/cache"
 	"ponglehub.co.uk/crd-lib/pkg/client"
 	"ponglehub.co.uk/crd-lib/pkg/v1alpha1"
 )
+
+type pipelineListerWatcher struct {
+	client *client.MinionCRDClient
+}
+
+func (w *pipelineListerWatcher) List(options metav1.ListOptions) (runtime.Object, error) {
+	return w.client.ListPipelines(options)
+}
+
+func (w *pipelineListerWatcher) Watch(options metav1.ListOptions) (watch.Interface, error) {
+	return w.client.WatchPipelines(options)
+}
 
 // Pipelines returns a channel into which new mongo user events will be pushed
 func Pipelines() (*PipelineInformer, error) {
@@ -23,9 +39,9 @@ func Pipelines() (*PipelineInformer, error) {
 		&v1alpha1.Pipeline{},
 		1*time.Minute,
 		cache.ResourceEventHandlerFuncs{
-			AddFunc:    addFunc(events),
-			UpdateFunc: updateFunc(events),
-			DeleteFunc: deleteFunc(events),
+			AddFunc:    addPipelineFunc(events),
+			UpdateFunc: updatePipelineFunc(events),
+			DeleteFunc: deletePipelineFunc(events),
 		},
 		cache.Indexers{},
 	)
@@ -38,8 +54,10 @@ func Pipelines() (*PipelineInformer, error) {
 	}, nil
 }
 
-func addFunc(events chan<- PipelineEvent) func(interface{}) {
+func addPipelineFunc(events chan<- PipelineEvent) func(interface{}) {
 	return func(obj interface{}) {
+		logrus.Info("Added event")
+
 		events <- PipelineEvent{
 			Kind:    ADDED,
 			Current: obj.(*v1alpha1.Pipeline),
@@ -47,8 +65,10 @@ func addFunc(events chan<- PipelineEvent) func(interface{}) {
 	}
 }
 
-func updateFunc(events chan<- PipelineEvent) func(interface{}, interface{}) {
+func updatePipelineFunc(events chan<- PipelineEvent) func(interface{}, interface{}) {
 	return func(obj1 interface{}, obj2 interface{}) {
+		logrus.Info("Updated event")
+
 		events <- PipelineEvent{
 			Kind:     UPDATED,
 			Current:  obj2.(*v1alpha1.Pipeline),
@@ -57,8 +77,10 @@ func updateFunc(events chan<- PipelineEvent) func(interface{}, interface{}) {
 	}
 }
 
-func deleteFunc(events chan<- PipelineEvent) func(interface{}) {
+func deletePipelineFunc(events chan<- PipelineEvent) func(interface{}) {
 	return func(obj interface{}) {
+		logrus.Info("Deleted event")
+
 		events <- PipelineEvent{
 			Kind:     DELETED,
 			Previous: obj.(*v1alpha1.Pipeline),
