@@ -4,7 +4,8 @@ module.exports = {
     get,
     list,
     post,
-    delete: deletePipeline
+    delete: deletePipeline,
+    tryDelete
 };
 
 async function list(namespace) {
@@ -56,6 +57,21 @@ async function post(namespace, name, resources, steps) {
         });
 
     return result;
+}
+
+async function tryDelete(namespace, name) {
+    try {
+        return await deletePipeline(namespace, name);
+    } catch (err) {
+        if (err.statusCode === 404) {
+            return {
+                statusCode: 404,
+                body: null
+            };
+        }
+
+        throw err;
+    }
 }
 
 async function deletePipeline(namespace, name) {

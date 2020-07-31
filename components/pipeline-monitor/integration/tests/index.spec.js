@@ -3,7 +3,7 @@ const NAMESPACE = process.env.NAMESPACE;
 
 describe('test', () => {
     beforeEach(async () => {
-        await crds.pipelines.delete(NAMESPACE, 'my-pipeline');
+        await crds.pipelines.tryDelete(NAMESPACE, 'my-pipeline');
     });
 
     it('works', async () => {
