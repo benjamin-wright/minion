@@ -4,6 +4,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	crdClient "ponglehub.co.uk/crd-lib/pkg/client"
+	"ponglehub.co.uk/crd-lib/pkg/informer"
 	crdInformer "ponglehub.co.uk/crd-lib/pkg/informer"
 	"ponglehub.co.uk/crd-lib/pkg/v1alpha1"
 	"ponglehub.co.uk/pipeline-monitor/config"
@@ -23,13 +24,39 @@ func main() {
 		log.Fatalf("Failed to create CRD client: %+v", err)
 	}
 
-	informer, err := crdInformer.Pipelines()
+	pipelineInformer, err := crdInformer.Pipelines()
 	if err != nil {
-		log.Fatalf("Failed to create CRD informer: %+v", err)
+		log.Fatalf("Failed to create pipeline CRD informer: %+v", err)
 	}
 
-	for event := range informer.Events {
-		log.Infof("Received event: %s", event.Kind)
+	resourceInformer, err := crdInformer.Resources()
+	if err != nil {
+		log.Fatalf("Failed to create resource CRD informer: %+v", err)
+	}
+
+	aggregated := make(chan interface{}, 20)
+
+	go func(aggregated chan<- interface{}, pipelines <-chan informer.PipelineEvent) {
+		for event := range pipelines {
+			aggregated <- event
+		}
+	}(aggregated, pipelineInformer.Events)
+
+	go func(aggregated chan<- interface{}, resources <-chan informer.ResourceEvent) {
+		for event := range resources {
+			aggregated <- event
+		}
+	}(aggregated, resourceInformer.Events)
+
+	for event := range aggregated {
+		switch event := event.(type) {
+		case crdInformer.PipelineEvent:
+			log.Infof("Received pipeline event: %s", event.Kind)
+		case crdInformer.ResourceEvent:
+			log.Infof("Received resource event: %s", event.Kind)
+		default:
+			log.Errorf("Unknown event type: %T", event)
+		}
 
 		pipelines, err := client.ListPipelines(metav1.ListOptions{})
 		if err != nil {
