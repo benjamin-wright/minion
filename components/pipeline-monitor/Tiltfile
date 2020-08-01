@@ -15,7 +15,7 @@ local_resource(
 local_resource(
     'compile',
     'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/pipeline-monitor',
-    deps=['./src', '../crd-lib']
+    deps=['./src', '../../modules/crd-lib']
 )
 
 local_resource(
@@ -28,8 +28,9 @@ docker_build_with_restart(
     'pipeline-monitor',
     'build',
     entrypoint='/go/bin/pipeline-monitor',
-    dockerfile='Dockerfile',
+    dockerfile='../go.Dockerfile',
     build_args={
+        'BASE_IMAGE': 'alpine',
         'EXE_NAME': 'pipeline-monitor'
     },
     live_update=[
@@ -45,7 +46,7 @@ crd_lib = npm_module("crd-lib")
 docker_build(
     'int-tests',
     'integration',
-    dockerfile='integration/Dockerfile',
+    dockerfile='../jest.Dockerfile',
     network='host'
 )
 

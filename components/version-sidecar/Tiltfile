@@ -1,0 +1,63 @@
+load('ext://restart_process', 'docker_build_with_restart')
+load('../../tilt_shared/npm.Tiltfile', 'npm_init')
+allow_k8s_contexts('kind-local-dev')
+
+# CRDs
+
+local_resource(
+    'crds',
+    'helm delete crds || true && helm install crds ../../crds',
+    deps=['./crds']
+)
+
+# Version sidecar
+
+local_resource(
+    'compile',
+    'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/version-sidecar',
+    deps=['./src', '../crd-lib']
+)
+
+local_resource(
+    'unit-tests',
+    'cd src && go test ./... -timeout 10s',
+    deps=['./src']
+)
+
+docker_build(
+    'version-sidecar',
+    'build',
+    dockerfile='../go.Dockerfile',
+    build_args={
+        'EXE_NAME': 'version-sidecar'
+    },
+    live_update=[
+        sync('./build', '/go/bin')
+    ],
+    match_in_env_vars=True
+)
+
+# Integration
+
+npm_init("integration")
+
+docker_build(
+    'int-tests',
+    'integration',
+    dockerfile='../jest.Dockerfile',
+    network='host'
+)
+
+k8s_resource(
+    'version-sidecar-test',
+    new_name='int-tests'
+)
+
+# Deployment
+
+k8s_yaml(helm('chart', name='version-sidecar', namespace='default', set=[
+    'image=version-sidecar',
+    'tests.enabled=true',
+    'tests.environment.values.loggerLevel=info',
+    'tests.image=int-tests'
+]))

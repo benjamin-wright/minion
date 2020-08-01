@@ -1,0 +1,23 @@
+# image:
+roleName: version-sidecar
+roleBindingName: version-sidecar
+serviceAccount: version-sidecar
+
+tests:
+  enabled: false
+  name: version-sidecar-test
+  # image:
+  roleName: version-sidecar-test
+  roleBindingName: version-sidecar-test
+  serviceAccount: version-sidecar-test
+  environment:
+    name: version-sidecar-test-env
+    values:
+      logLevel: debug
+  resources:
+    limits:
+      cpu: 1
+      memory: 512M
+    requests:
+      cpu: 1
+      memory: 512M

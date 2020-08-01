@@ -1,0 +1,22 @@
+{
+  "name": "integration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "jest --detectOpenHandles --verbose --runInBand --env=node",
+    "watch": "jest --watchAll --env=node"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@minion-ci/async": "^1.0.3",
+    "@minion-ci/crd-lib": "^1.0.95",
+    "@minion-ci/eslint-config-minion": "^1.0.33",
+    "eslint": "^7.6.0",
+    "faker": "^4.1.0",
+    "jest": "^26.2.2",
+    "kubernetes-client": "^9.0.0"
+  }
+}

@@ -24,6 +24,10 @@
 			"name": "npm: crd-lib"
 		},
 		{
+			"path": "modules/async",
+			"name": "npm: async"
+		},
+		{
 			"path": "components/pipeline-monitor",
 			"name": "pipeline-monitor"
 		},
@@ -34,6 +38,18 @@
 		{
 			"path": "components/pipeline-monitor/src",
 			"name": "pipeline-monitor (src)"
+		},
+		{
+			"path": "components/version-sidecar",
+			"name": "version-sidecar"
+		},
+		{
+			"path": "components/version-sidecar/integration",
+			"name": "version-sidecar (int)"
+		},
+		{
+			"path": "components/version-sidecar/src",
+			"name": "version-sidecar (src)"
 		}
 	],
 	"settings": {}

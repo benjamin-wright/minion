@@ -1,0 +1,26 @@
+{{- if .Values.tests.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.tests.name }}
+  labels:
+    app: version-sidecar
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      serviceAccount: {{ .Values.tests.serviceAccount }}
+      restartPolicy: Never
+      containers:
+      - name: tests
+        image: {{ .Values.tests.image }}
+        imagePullPolicy: Always
+        env:
+        - name: SIDECAR_IMAGE
+          value: {{ .Values.image }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.tests.environment.name }}
+        resources:
+          {{- toYaml .Values.tests.resources | nindent 10 }}
+{{- end -}}
