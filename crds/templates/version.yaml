@@ -17,11 +17,9 @@ spec:
               properties:
                 resource:
                   type: string
-                pipeline:
-                  type: string
                 version:
                   type: string
-              required: [ resource, pipeline, version ]
+              required: [ resource, version ]
   scope: Namespaced
   names:
     plural: versions

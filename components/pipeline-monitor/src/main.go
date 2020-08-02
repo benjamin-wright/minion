@@ -7,7 +7,7 @@ import (
 	"ponglehub.co.uk/crd-lib/pkg/informer"
 	crdInformer "ponglehub.co.uk/crd-lib/pkg/informer"
 	"ponglehub.co.uk/crd-lib/pkg/v1alpha1"
-	"ponglehub.co.uk/pipeline-monitor/config"
+	"ponglehub.co.uk/pipeline-monitor/internal/config"
 )
 
 func main() {

@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	crds "ponglehub.co.uk/crd-lib/pkg/client"
 	"ponglehub.co.uk/crd-lib/pkg/v1alpha1"
 	"ponglehub.co.uk/version-sidecar/internal/config"
+	"ponglehub.co.uk/version-sidecar/internal/loading"
 )
 
 func main() {
@@ -33,14 +36,21 @@ func main() {
 		log.Fatalf("Failed to create client: %+v", err)
 	}
 
+	version, err := loading.LoadVersion()
+	if err != nil {
+		log.Fatalf("Failed to create client: %+v", err)
+	}
+
 	err = client.PostVersion(&v1alpha1.Version{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "my-job",
+			Name: fmt.Sprintf("%s-%s", cfg.Resource, version),
+			Labels: map[string]string{
+				"resource": cfg.Resource,
+			},
 		},
 		Spec: v1alpha1.VersionSpec{
 			Resource: cfg.Resource,
-			Pipeline: cfg.Pipeline,
-			Version:  "version",
+			Version:  version,
 		},
 	}, "default")
 

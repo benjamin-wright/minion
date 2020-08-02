@@ -7,7 +7,6 @@ import (
 // VersionSpec The specification for a Minion-CI resource CRD
 type VersionSpec struct {
 	Resource string `json:"resource,omitempty"`
-	Pipeline string `json:"pipeline,omitempty"`
 	Version  string `json:"version,omitempty"`
 }
 

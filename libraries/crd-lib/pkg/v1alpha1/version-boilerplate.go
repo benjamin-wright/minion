@@ -10,7 +10,6 @@ func (in *Version) DeepCopyInto(out *Version) {
 	out.ObjectMeta = in.ObjectMeta
 	out.Spec = VersionSpec{
 		Resource: in.Spec.Resource,
-		Pipeline: in.Spec.Pipeline,
 		Version:  in.Spec.Version,
 	}
 }

@@ -13,7 +13,7 @@ async function list(namespace, selectors) {
     if (selectors) {
         query = {
             qs: {
-                labelSelectors: selectors
+                labelSelector: selectors
             }
         };
     }
@@ -26,7 +26,7 @@ async function list(namespace, selectors) {
         .version
         .get(query);
 
-    return result.items;
+    return result.body.items;
 }
 
 async function get(namespace, name) {

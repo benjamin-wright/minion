@@ -6,16 +6,22 @@ const SERVICE_ACCOUNT = process.env.SERVICE_ACCOUNT;
 
 module.exports = {
     clean,
-    createJob
+    createJob,
+    getStatus
 };
 
 async function clean() {
     const client = await crds.client.get();
     await client.apis.batch.v1.namespaces(NAMESPACE).jobs.delete({ qs: { labelSelector: 'minion.ponglehub.co.uk/integration=true' } });
     await client.api.v1.namespaces(NAMESPACE).pods.delete({ qs: { labelSelector: 'minion.ponglehub.co.uk/integration=true' } });
+
+    const versions = await crds.versions.list(NAMESPACE);
+    await Promise.all(
+        versions.map(v => crds.versions.delete(NAMESPACE, v.metadata.name))
+    );
 }
 
-async function createJob(name, version, pipeline, resource) {
+async function createJob(name, version, resource) {
     const manifest = {
         apiVersion: 'batch/v1',
         kind: 'Job',
@@ -54,7 +60,6 @@ async function createJob(name, version, pipeline, resource) {
                             name: 'sidecar',
                             image: SIDECAR_IMAGE,
                             env: [
-                                { name: 'PIPELINE', value: pipeline },
                                 { name: 'RESOURCE', value: resource }
                             ],
                             volumeMounts: [
@@ -78,4 +83,11 @@ async function createJob(name, version, pipeline, resource) {
 
     const client = await crds.client.get();
     await client.apis.batch.v1.namespaces(NAMESPACE).job.post({ body: manifest });
-};
+}
+
+async function getStatus(name) {
+    const client = await crds.client.get();
+    const job = await client.apis.batch.v1.namespaces(NAMESPACE).job(name).get();
+
+    return job.body.status;
+}
