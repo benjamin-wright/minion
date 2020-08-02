@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@minion-ci/async": "^1.0.3",
-    "@minion-ci/crd-lib": "^1.0.95",
-    "@minion-ci/eslint-config-minion": "^1.0.33",
+    "@minion-ci/async": "^1.0.5",
+    "@minion-ci/crd-lib": "^1.0.101",
+    "@minion-ci/eslint-config-minion": "^1.0.35",
     "eslint": "^7.6.0",
     "faker": "^4.1.0",
     "jest": "^26.2.2",

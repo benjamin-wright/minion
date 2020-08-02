@@ -1,6 +1,6 @@
 {
   "name": "@minion-ci/eslint-config-minion",
-  "version": "1.0.33",
+  "version": "1.0.35",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

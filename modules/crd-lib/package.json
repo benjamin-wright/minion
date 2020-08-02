@@ -1,6 +1,6 @@
 {
   "name": "@minion-ci/crd-lib",
-  "version": "1.0.95",
+  "version": "1.0.101",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

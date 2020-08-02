@@ -2,6 +2,7 @@ const crds = require('@minion-ci/crd-lib');
 
 const NAMESPACE = process.env.NAMESPACE;
 const SIDECAR_IMAGE = process.env.SIDECAR_IMAGE;
+const SERVICE_ACCOUNT = process.env.SERVICE_ACCOUNT;
 
 module.exports = {
     clean,
@@ -11,9 +12,10 @@ module.exports = {
 async function clean() {
     const client = await crds.client.get();
     await client.apis.batch.v1.namespaces(NAMESPACE).jobs.delete({ qs: { labelSelector: 'minion.ponglehub.co.uk/integration=true' } });
+    await client.api.v1.namespaces(NAMESPACE).pods.delete({ qs: { labelSelector: 'minion.ponglehub.co.uk/integration=true' } });
 }
 
-async function createJob(name, version) {
+async function createJob(name, version, pipeline, resource) {
     const manifest = {
         apiVersion: 'batch/v1',
         kind: 'Job',
@@ -26,7 +28,13 @@ async function createJob(name, version) {
         },
         spec: {
             template: {
+                metadata: {
+                    labels: {
+                        'minion.ponglehub.co.uk/integration': 'true'
+                    }
+                },
                 spec: {
+                    serviceAccount: SERVICE_ACCOUNT,
                     restartPolicy: 'Never',
                     initContainers: [
                         {
@@ -45,6 +53,10 @@ async function createJob(name, version) {
                         {
                             name: 'sidecar',
                             image: SIDECAR_IMAGE,
+                            env: [
+                                { name: 'PIPELINE', value: pipeline },
+                                { name: 'RESOURCE', value: resource }
+                            ],
                             volumeMounts: [
                                 {
                                     name: 'versions',

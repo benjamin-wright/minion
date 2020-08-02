@@ -5,4 +5,4 @@ metadata:
 rules:
 - apiGroups: ["minion.ponglehub.co.uk"]
   resources: ["versions"]
-  verbs: ["create"]
+  verbs: ["create", "get"]

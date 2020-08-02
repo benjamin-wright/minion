@@ -6,4 +6,5 @@ metadata:
 data:
   LOG_LEVEL: {{ .Values.tests.environment.values.logLevel }}
   NAMESPACE: {{ .Release.Namespace }}
+  SERVICE_ACCOUNT: {{ .Values.serviceAccount }}
 {{- end -}}

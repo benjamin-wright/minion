@@ -26,6 +26,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PipelineList{},
 		&Resource{},
 		&ResourceList{},
+		&Version{},
+		&VersionList{},
 	)
 
 	scheme.AddKnownTypes(
@@ -34,6 +36,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PipelineList{},
 		&Resource{},
 		&ResourceList{},
+		&Version{},
+		&VersionList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, schemeGroupVersion)

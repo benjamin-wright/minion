@@ -4,8 +4,8 @@ kind: Role
 metadata:
   name: {{ .Values.tests.roleName }}
 rules:
-- apiGroups: ["batch"]
-  resources: ["jobs"]
+- apiGroups: ["", "batch"]
+  resources: ["pods", "jobs"]
   verbs: ["create", "delete", "get", "list", "deletecollection"]
 - apiGroups: ["minion.ponglehub.co.uk"]
   resources: ["versions"]

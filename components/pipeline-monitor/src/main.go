@@ -14,7 +14,14 @@ func main() {
 	cfg := config.Get()
 	log.Infof("Running with config: %s", cfg.String())
 
-	err := v1alpha1.Init()
+	logLevel, err := log.ParseLevel(cfg.LogLevel)
+	if err == nil {
+		log.SetLevel(logLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
+
+	err = v1alpha1.Init()
 	if err != nil {
 		log.Fatalf("Failed registering CRD with kube client: %+v", err)
 	}

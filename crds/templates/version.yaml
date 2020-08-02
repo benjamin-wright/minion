@@ -21,6 +21,7 @@ spec:
                   type: string
                 version:
                   type: string
+              required: [ resource, pipeline, version ]
   scope: Namespaced
   names:
     plural: versions
