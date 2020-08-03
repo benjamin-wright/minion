@@ -5,6 +5,6 @@ metadata:
   name: {{ .Values.tests.roleName }}
 rules:
 - apiGroups: ["minion.ponglehub.co.uk"]
-  resources: ["pipelines", "resources"]
+  resources: ["resources"]
   verbs: ["create", "delete", "get", "list"]
 {{- end -}}

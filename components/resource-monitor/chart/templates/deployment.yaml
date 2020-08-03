@@ -8,17 +8,20 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pipeline-monitor
+      app: resource-monitor
   template:
     metadata:
       labels:
-        app: pipeline-monitor
+        app: resource-monitor
     spec:
       serviceAccount: {{ .Values.serviceAccount }}
       containers:
       - name: operator
         image: {{ .Values.image.name }}
         imagePullPolicy: Always
+        env:
+        - name: SIDECAR_IMAGE
+          value: {{ .Values.environment.values.sidecarImage }}
         envFrom:
         - configMapRef:
             name: {{ .Values.environment.name }}

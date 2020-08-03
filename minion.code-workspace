@@ -28,16 +28,16 @@
 			"name": "npm: async"
 		},
 		{
-			"path": "components/pipeline-monitor",
-			"name": "pipeline-monitor"
+			"path": "components/resource-monitor",
+			"name": "resource-monitor"
 		},
 		{
-			"path": "components/pipeline-monitor/integration",
-			"name": "pipeline-monitor (int)"
+			"path": "components/resource-monitor/integration",
+			"name": "resource-monitor (int)"
 		},
 		{
-			"path": "components/pipeline-monitor/src",
-			"name": "pipeline-monitor (src)"
+			"path": "components/resource-monitor/src",
+			"name": "resource-monitor (src)"
 		},
 		{
 			"path": "components/version-sidecar",

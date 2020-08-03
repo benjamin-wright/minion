@@ -1,5 +1,5 @@
 apiVersion: v2
-name: pipeline-monitor
+name: resource-monitor
 description: A Helm chart for Kubernetes
 type: application
 

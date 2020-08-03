@@ -3,7 +3,7 @@ package informer
 import "ponglehub.co.uk/crd-lib/pkg/v1alpha1"
 
 type ResourceEvent struct {
-	Kind     string
+	Kind     EventType
 	Current  *v1alpha1.Resource
 	Previous *v1alpha1.Resource
 }

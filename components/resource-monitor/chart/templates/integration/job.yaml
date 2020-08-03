@@ -4,7 +4,7 @@ kind: Job
 metadata:
   name: {{ .Values.tests.name }}
   labels:
-    app: pipeline-monitor
+    app: resource-monitor
 spec:
   backoffLimit: 0
   template:

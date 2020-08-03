@@ -1,5 +1,5 @@
 load('ext://restart_process', 'docker_build_with_restart')
-load('../../tilt_shared/npm.Tiltfile', 'npm_module', 'npm_init')
+load('../../tilt_shared/npm.Tiltfile', 'npm_init')
 allow_k8s_contexts('kind-local-dev')
 
 # CRDs
@@ -10,11 +10,11 @@ local_resource(
     deps=['./crds']
 )
 
-# Pipeline Monitor
+# Resource Monitor
 
 local_resource(
     'compile',
-    'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/pipeline-monitor',
+    'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/resource-monitor',
     deps=['./src', '../../modules/crd-lib']
 )
 
@@ -25,13 +25,13 @@ local_resource(
 )
 
 docker_build_with_restart(
-    'pipeline-monitor',
+    'resource-monitor',
     'build',
-    entrypoint='/go/bin/pipeline-monitor',
+    entrypoint='/go/bin/go_binary',
     dockerfile='../go.Dockerfile',
     build_args={
         'BASE_IMAGE': 'alpine',
-        'EXE_NAME': 'pipeline-monitor'
+        'EXE_NAME': 'resource-monitor'
     },
     live_update=[
         sync('./build', '/go/bin')
@@ -40,8 +40,7 @@ docker_build_with_restart(
 
 # Integration tests
 
-npm_init()
-crd_lib = npm_module("crd-lib")
+npm_init("integration")
 
 docker_build(
     'int-tests',
@@ -51,16 +50,16 @@ docker_build(
 )
 
 k8s_resource(
-    'pipeline-monitor-int-tests',
-    new_name='int-tests',
-    resource_deps=[ crd_lib ]
+    'resource-monitor-int-tests',
+    new_name='int-tests'
 )
 
 # Deployment
 
-k8s_yaml(helm('chart', name='pipeline-monitor', namespace='default', set=[
-    'image.name=pipeline-monitor',
+k8s_yaml(helm('chart', name='resource-monitor', namespace='default', set=[
+    'image.name=resource-monitor',
     'environment.values.loggerLevel=info',
+    'environment.values.sidecarImage=version-sidecar',
     'tests.enabled=true',
     'tests.image=int-tests'
 ]))

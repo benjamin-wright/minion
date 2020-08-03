@@ -41,6 +41,8 @@ func main() {
 		log.Fatalf("Failed to create client: %+v", err)
 	}
 
+	log.Infof("Got version: %s", version)
+
 	err = client.PostVersion(&v1alpha1.Version{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: fmt.Sprintf("%s-%s", cfg.Resource, version),

@@ -1,0 +1,43 @@
+name: resource-monitor
+serviceAccount: resource-monitor
+roleName: resource-monitor
+roleBindingName: resource-monitor
+
+image:
+  # name:
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 32M
+  requests:
+    cpu: 250m
+    memory: 32M
+
+environment:
+  name: resource-monitor-environment
+  values:
+    logLevel: info
+    # sidecarImage:
+
+tests:
+  enabled: false
+  name: resource-monitor-int-tests
+  # image:
+
+  serviceAccount: resource-monitor-int-tests
+  roleName: resource-monitor-int-tests
+  roleBindingName: resource-monitor-int-tests
+
+  environment:
+    name: resource-monitor-int-environment
+    values:
+      logLevel: info
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 512M
+    requests:
+      cpu: 1
+      memory: 512M
