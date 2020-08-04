@@ -7,13 +7,15 @@ import (
 
 // Config represents the current application configuration
 type Config struct {
-	LogLevel string
+	LogLevel     string
+	SidecarImage string
 }
 
 func (c Config) String() string {
 	return fmt.Sprintf(
-		"{LogLevel: %s}",
+		"{LogLevel: %s, SidecarImage: %s}",
 		c.LogLevel,
+		c.SidecarImage,
 	)
 }
 
@@ -24,7 +26,13 @@ func Get() Config {
 		logLevel = "info"
 	}
 
+	sidecarImage, exists := os.LookupEnv("SIDECAR_IMAGE")
+	if !exists {
+		logLevel = "info"
+	}
+
 	return Config{
-		LogLevel: logLevel,
+		LogLevel:     logLevel,
+		SidecarImage: sidecarImage,
 	}
 }
