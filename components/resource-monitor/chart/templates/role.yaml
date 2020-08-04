@@ -6,3 +6,6 @@ rules:
 - apiGroups: ["minion.ponglehub.co.uk"]
   resources: ["resources"]
   verbs: ["list", "get", "update", "watch"]
+- apiGroups: ["batch"]
+  resources: ["cronjobs"]
+  verbs: ["create"]

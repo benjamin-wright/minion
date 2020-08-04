@@ -33,8 +33,11 @@ docker_build_with_restart(
         'BASE_IMAGE': 'alpine',
         'EXE_NAME': 'resource-monitor'
     },
+    ignore=[
+        'resource-monitor-go-tmp-umask'
+    ],
     live_update=[
-        sync('./build', '/go/bin')
+        sync('./build/resource-monitor', '/go/bin/go_binary')
     ]
 )
 
