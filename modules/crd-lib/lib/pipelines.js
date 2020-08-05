@@ -17,7 +17,7 @@ async function list(namespace) {
         .pipeline
         .get();
 
-    return result.items;
+    return result.body.items;
 }
 
 async function get(namespace, name) {

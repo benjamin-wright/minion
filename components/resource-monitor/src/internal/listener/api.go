@@ -20,7 +20,12 @@ func (l *Listener) Listen(events <-chan crdInformer.ResourceEvent, cfg config.Co
 		case crdInformer.UPDATED:
 			log.Info("Resource Updated")
 		case crdInformer.DELETED:
-			log.Info("Resource Deleted")
+			err := l.m.Delete(event.Previous)
+			if err != nil {
+				log.Errorf("Failed to delete resource: %+v", err)
+			} else {
+				log.Infof("Resource deleted: %s", event.Previous.ObjectMeta.Name)
+			}
 		}
 	}
 }

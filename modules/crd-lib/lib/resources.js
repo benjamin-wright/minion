@@ -17,7 +17,7 @@ async function list(namespace) {
         .resource
         .get();
 
-    return result.items;
+    return result.body.items;
 }
 
 async function get(namespace, name) {

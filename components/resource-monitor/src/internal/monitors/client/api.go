@@ -14,3 +14,8 @@ func (w *Wrapper) Create(namespace string, cronjob *v1beta1.CronJob) (*v1beta1.C
 func (w *Wrapper) Delete(namespace string, name string, options *metav1.DeleteOptions) error {
 	return w.clientset.BatchV1beta1().CronJobs(namespace).Delete(name, options)
 }
+
+// Get return a specific cronjob
+func (w *Wrapper) Get(namespace string, name string, options metav1.GetOptions) (*v1beta1.CronJob, error) {
+	return w.clientset.BatchV1beta1().CronJobs(namespace).Get(name, options)
+}
