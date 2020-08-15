@@ -1,6 +1,6 @@
 {
   "name": "@minion-ci/async",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "description": "",
   "main": "lib/index.js",
   "scripts": {

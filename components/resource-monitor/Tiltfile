@@ -10,6 +10,15 @@ local_resource(
     deps=['./crds']
 )
 
+# Dummy Sidecar
+
+custom_build(
+    'version-sidecar',
+    'docker pull docker.io/busybox && docker tag docker.io/busybox $EXPECTED_REF',
+    ['.'],
+    match_in_env_vars=True
+)
+
 # Resource Monitor
 
 local_resource(
