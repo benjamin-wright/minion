@@ -6,7 +6,7 @@ metadata:
 rules:
 - apiGroups: ["minion.ponglehub.co.uk"]
   resources: ["resources"]
-  verbs: ["create", "delete", "get", "list"]
+  verbs: ["create", "delete", "get", "update", "list"]
 - apiGroups: ["", "batch"]
   resources: ["pods", "cronjobs", "jobs"]
   verbs: ["create", "delete", "get", "list", "deletecollection"]

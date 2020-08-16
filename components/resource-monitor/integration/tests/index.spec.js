@@ -11,17 +11,13 @@ describe('test', () => {
         await k8s.deleteMonitorJobs();
     });
 
-    it('works', async () => {
-        const job1 = faker.name.firstName().toLowerCase();
-        const job2 = faker.name.firstName().toLowerCase();
+    it('should create a resource monitor cronjob', async () => {
+        const resourceName = faker.name.firstName().toLowerCase();
 
-        await crds.resources.post(NAMESPACE, job1, 'docker.io/busybox', [{ name: 'FOO', value: 'BAR' }], []);
-        await crds.resources.post(NAMESPACE, job2, 'docker.io/busybox', [{ name: 'FOO', value: 'BAR' }], []);
+        await crds.resources.post(NAMESPACE, resourceName, 'docker.io/busybox', [{ name: 'FOO', value: 'BAR' }], []);
 
-        const client = await crds.client.get();
-
-        const result = await async.waitFor(() => client.apis.batch.v1beta1.namespace(NAMESPACE).cronjobs(`${job1}-monitor`).get());
-        const podSpec = result.body.spec.jobTemplate.spec.template.spec;
+        const cronjob = await async.waitFor(() => k8s.getMonitorJob(`${resourceName}-monitor`));
+        const podSpec = cronjob.spec.jobTemplate.spec.template.spec;
 
         const actual = podSpec.initContainers.map(c => ({ image: c.image, env: c.env }));
         const expected = [
@@ -34,5 +30,29 @@ describe('test', () => {
         ];
 
         expect(actual).toEqual(expected);
+    });
+
+    it('should update cronjob when resource is updated', async () => {
+        const resourceName = faker.name.firstName().toLowerCase();
+
+        await crds.resources.post(NAMESPACE, resourceName, 'docker.io/busybox:1.31', [{ name: 'FOO', value: 'BAR' }], []);
+        await crds.resources.put(NAMESPACE, resourceName, 'docker.io/busybox:1.32', [{ name: 'FOO', value: 'BAZ' }], []);
+
+        await async.waitFor(async () => {
+            const cronjob = await async.waitFor(() => k8s.getMonitorJob(`${resourceName}-monitor`));
+            const podSpec = cronjob.spec.jobTemplate.spec.template.spec;
+
+            const actual = podSpec.initContainers.map(c => ({ image: c.image, env: c.env }));
+            const expected = [
+                {
+                    image: 'docker.io/busybox:1.32',
+                    env: [
+                        { name: 'FOO', value: 'BAZ' }
+                    ]
+                }
+            ];
+
+            expect(actual).toEqual(expected);
+        });
     });
 });

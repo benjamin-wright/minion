@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"encoding/json"
 	"fmt"
 
 	batchv1 "k8s.io/api/batch/v1"
@@ -12,8 +13,37 @@ import (
 	"ponglehub.co.uk/resource-monitor/internal/config"
 )
 
+// ConvertBack changes a cronjob for a resource back into a resource definition
+func (c *Converter) ConvertBack(cronjob *v1beta1.CronJob) (*v1alpha1.ResourceSpec, error) {
+	// annotations := cronjob.ObjectMeta.Annotations
+	image := ""
+	env := []v1alpha1.EnvVar{}
+	secrets := []v1alpha1.Secret{}
+
+	return &v1alpha1.ResourceSpec{
+		Image:   image,
+		Env:     env,
+		Secrets: secrets,
+	}, nil
+}
+
 // Convert create a cronjob definition from the provided resource
-func (c *Converter) Convert(resource *v1alpha1.Resource, cfg config.Config) *v1beta1.CronJob {
+func (c *Converter) Convert(resource *v1alpha1.Resource, cfg config.Config) (*v1beta1.CronJob, error) {
+	imageAnnotation, err := json.Marshal(resource.Spec.Image)
+	if err != nil {
+		return nil, fmt.Errorf("Error jsonifying image: %+v", err)
+	}
+
+	envAnnotation, err := json.Marshal(resource.Spec.Env)
+	if err != nil {
+		return nil, fmt.Errorf("Error jsonifying environment variables: %+v", err)
+	}
+
+	secretsAnnotation, err := json.Marshal(resource.Spec.Secrets)
+	if err != nil {
+		return nil, fmt.Errorf("Error jsonifying secrets: %+v", err)
+	}
+
 	env := []corev1.EnvVar{}
 	for _, variable := range resource.Spec.Env {
 		env = append(env, corev1.EnvVar{
@@ -66,9 +96,9 @@ func (c *Converter) Convert(resource *v1alpha1.Resource, cfg config.Config) *v1b
 				"Resource": resource.ObjectMeta.Name,
 			},
 			Annotations: map[string]string{
-				"minion/env":     fmt.Sprint(env),
-				"minion/volumes": fmt.Sprint(volumes),
-				"minion/mounts":  fmt.Sprint(mounts),
+				"minion/image":   string(imageAnnotation),
+				"minion/env":     string(envAnnotation),
+				"minion/secrets": string(secretsAnnotation),
 			},
 		},
 		Spec: batchv1beta1.CronJobSpec{
@@ -108,5 +138,5 @@ func (c *Converter) Convert(resource *v1alpha1.Resource, cfg config.Config) *v1b
 				},
 			},
 		},
-	}
+	}, nil
 }

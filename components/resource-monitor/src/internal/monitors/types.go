@@ -12,12 +12,14 @@ import (
 // Interface behaviour contract for the cronjobs api
 type clientInterface interface {
 	Create(namespace string, cronjob *v1beta1.CronJob) (*v1beta1.CronJob, error)
+	Update(namespace string, cronjob *v1beta1.CronJob) (*v1beta1.CronJob, error)
 	Delete(namespace string, name string, options *metav1.DeleteOptions) error
 	Get(namespace string, name string, options metav1.GetOptions) (*v1beta1.CronJob, error)
 }
 
 type converterInterface interface {
-	Convert(resource *v1alpha1.Resource, cfg config.Config) *v1beta1.CronJob
+	Convert(resource *v1alpha1.Resource, cfg config.Config) (*v1beta1.CronJob, error)
+	ConvertBack(cronjob *v1beta1.CronJob) (*v1alpha1.ResourceSpec, error)
 }
 
 // Monitors aggregation of monitoring related functions

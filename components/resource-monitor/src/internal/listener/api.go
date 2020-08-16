@@ -18,7 +18,12 @@ func (l *Listener) Listen(events <-chan crdInformer.ResourceEvent, cfg config.Co
 				log.Infof("Resource added: %s", event.Current.ObjectMeta.Name)
 			}
 		case crdInformer.UPDATED:
-			log.Info("Resource Updated")
+			err := l.m.Update(event.Previous, event.Current, cfg)
+			if err != nil {
+				log.Errorf("Failed to update resource: %+v", err)
+			} else {
+				log.Infof("Resource updated: %s", event.Current.ObjectMeta.Name)
+			}
 		case crdInformer.DELETED:
 			err := l.m.Delete(event.Previous)
 			if err != nil {

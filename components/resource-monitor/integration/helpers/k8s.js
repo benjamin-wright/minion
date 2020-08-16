@@ -2,18 +2,19 @@ const crds = require('@minion-ci/crd-lib');
 const NAMESPACE = process.env.NAMESPACE;
 
 module.exports = {
-    getMonitorJobs: getMonitorJobs,
+    getMonitorJob: getMonitorJob,
     deleteMonitorJobs: deleteMonitorJobs
 };
 
-async function getMonitorJobs() {
+async function getMonitorJob(name) {
     const client = await crds.client.get();
+    const result = await client.apis.batch.v1beta1.namespace(NAMESPACE).cronjob(name).get();
 
-    const jobs = await client.apis.batch.v1.namespace(NAMESPACE).jobs.get();
+    if (result.statusCode !== 200) {
+        throw new Error(`Expected 200 status code, recieved ${result.statusCode}`);
+    }
 
-    console.log(jobs.body.items.map(j => j.metadata.name));
-
-    return jobs.body.items.filter(job => job.metadata.name.includes('-monitor-'));
+    return result.body;
 }
 
 async function deleteMonitorJobs() {
