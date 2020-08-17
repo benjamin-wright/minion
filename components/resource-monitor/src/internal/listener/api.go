@@ -11,20 +11,19 @@ func (l *Listener) Listen(events <-chan crdInformer.ResourceEvent, cfg config.Co
 	for event := range events {
 		switch event.Kind {
 		case crdInformer.ADDED:
+			log.Infof("Added event: '%s'", event.Current.Name)
 			err := l.m.Create(event.Current, cfg)
 			if err != nil {
 				log.Errorf("Failed to add resource: %+v", err)
-			} else {
-				log.Infof("Resource added: %s", event.Current.ObjectMeta.Name)
 			}
 		case crdInformer.UPDATED:
+			log.Infof("Updated event: '%s'", event.Current.Name)
 			err := l.m.Update(event.Previous, event.Current, cfg)
 			if err != nil {
 				log.Errorf("Failed to update resource: %+v", err)
-			} else {
-				log.Infof("Resource updated: %s", event.Current.ObjectMeta.Name)
 			}
 		case crdInformer.DELETED:
+			log.Infof("Deleted event: '%s'", event.Previous.Name)
 			err := l.m.Delete(event.Previous)
 			if err != nil {
 				log.Errorf("Failed to delete resource: %+v", err)

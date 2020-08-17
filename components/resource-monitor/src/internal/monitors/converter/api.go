@@ -15,10 +15,30 @@ import (
 
 // ConvertBack changes a cronjob for a resource back into a resource definition
 func (c *Converter) ConvertBack(cronjob *v1beta1.CronJob) (*v1alpha1.ResourceSpec, error) {
-	// annotations := cronjob.ObjectMeta.Annotations
+	annotations := cronjob.ObjectMeta.Annotations
 	image := ""
+	if data, ok := annotations["minion/image"]; ok {
+		err := json.Unmarshal([]byte(data), &image)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	env := []v1alpha1.EnvVar{}
+	if data, ok := annotations["minion/env"]; ok {
+		err := json.Unmarshal([]byte(data), &env)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	secrets := []v1alpha1.Secret{}
+	if data, ok := annotations["minion/secrets"]; ok {
+		err := json.Unmarshal([]byte(data), &secrets)
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return &v1alpha1.ResourceSpec{
 		Image:   image,
