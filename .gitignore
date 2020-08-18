@@ -2,3 +2,4 @@ node_modules
 build
 tilt_modules
 charts
+.DS_Store
