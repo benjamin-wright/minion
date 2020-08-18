@@ -40,6 +40,14 @@
 			"name": "resource-monitor (src)"
 		},
 		{
+			"path": "components/resource-webhooks",
+			"name": "resource-webhooks"
+		},
+		{
+			"path": "components/resource-webhooks/src",
+			"name": "resource-webhooks (src)"
+		},
+		{
 			"path": "components/version-sidecar",
 			"name": "version-sidecar"
 		},

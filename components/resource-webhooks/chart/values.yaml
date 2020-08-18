@@ -1,0 +1,22 @@
+name: resource-webhooks
+serviceAccount: resource-webhooks
+roleName: resource-webhooks
+roleBindingName: resource-webhooks
+
+image:
+  # name:
+
+hostname: webhooks.minion.ponglehub.co.uk
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 64M
+  requests:
+    cpu: 250m
+    memory: 64M
+
+environment:
+  name: resource-webhooks-environment
+  values:
+    logLevel: info

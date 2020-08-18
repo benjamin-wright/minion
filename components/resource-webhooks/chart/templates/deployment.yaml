@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}
+  labels:
+    app: minion-ci
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-webhooks
+  template:
+    metadata:
+      labels:
+        app: resource-webhooks
+    spec:
+      serviceAccount: {{ .Values.serviceAccount }}
+      containers:
+      - name: server
+        image: {{ .Values.image.name }}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.environment.name }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}

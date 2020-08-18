@@ -1,0 +1,49 @@
+load('ext://restart_process', 'docker_build_with_restart')
+allow_k8s_contexts('kind-local-dev')
+
+# CRDs
+
+local_resource(
+    'crds',
+    'helm delete crds || true && helm install crds ../../crds',
+    deps=['./crds']
+)
+
+# Resource Monitor
+
+local_resource(
+    'compile',
+    'mkdir -p build && cd src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../build/resource-webhooks',
+    deps=['./src', '../../modules/crd-lib']
+)
+
+local_resource(
+    'unit-tests',
+    'cd src && go test ./... -timeout 10s',
+    deps=['./src']
+)
+
+docker_build_with_restart(
+    'resource-webhooks',
+    'build',
+    entrypoint='/go/bin/go_binary',
+    dockerfile='../go.Dockerfile',
+    build_args={
+        'BASE_IMAGE': 'alpine',
+        'EXE_NAME': 'resource-webhooks'
+    },
+    ignore=[
+        'resource-webhooks-go-tmp-umask'
+    ],
+    live_update=[
+        sync('./build/resource-webhooks', '/go/bin/go_binary')
+    ]
+)
+
+# Deployment
+
+k8s_yaml(helm('chart', name='resource-webhooks', namespace='default', set=[
+    'image.name=resource-webhooks',
+    'environment.values.loggerLevel=info',
+    'hostname=webhooks.minion.ponglehub.co.uk'
+]))
