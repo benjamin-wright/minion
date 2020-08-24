@@ -1,6 +1,6 @@
 load('ext://restart_process', 'docker_build_with_restart')
 load('../../tilt_shared/npm.Tiltfile', 'npm_init')
-allow_k8s_contexts('kind-local-dev')
+allow_k8s_contexts(['kind-local-dev', 'k3d-dev'])
 
 # CRDs
 
